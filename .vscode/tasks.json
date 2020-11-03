@@ -24,7 +24,6 @@
 				"/consoleloggerparameters:NoSummary"
 			],
 			"type": "process",
-			"dependsOn": "clean",
 			"group": {
 				"kind": "build",
 				"isDefault": true
@@ -68,14 +67,18 @@
 			}
 		},
 		{
+			"label": "azurite",
+			"command": "${command:azurite.start}",
+			"problemMatcher": []
+		},
+		{
 			"type": "func",
-			"dependsOn": "build",
-			"options": {
-				"cwd": "${workspaceFolder}/Api/bin/Debug/netcoreapp3.1"
-			},
 			"command": "host start",
+			"problemMatcher": "$func-powershell-watch",
 			"isBackground": true,
-			"problemMatcher": "$func-watch"
+			"options": {
+				"cwd": "${workspaceFolder}/API"
+			}
 		}
 	]
 }

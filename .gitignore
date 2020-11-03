@@ -340,3 +340,6 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+#Azurite Local Storage for Development and Testing
+.azurite

@@ -1,7 +1,8 @@
 {
-  "azureFunctions.deploySubpath": "Api/bin/Release/netcoreapp3.1/publish",
-  "azureFunctions.projectLanguage": "C#",
+  "azureFunctions.deploySubpath": "API",
+  "azureFunctions.projectLanguage": "PowerShell",
   "azureFunctions.projectRuntime": "~3",
   "debug.internalConsoleOptions": "neverOpen",
-  "azureFunctions.preDeployTask": "publish"
+  "azureFunctions.preDeployTask": "publish",
+  "azurite.location": "C:\\Users\\jgrote\\Projects\\AzurePrice\\.azurite"
 }
