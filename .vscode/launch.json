@@ -4,19 +4,18 @@
     {
       "name": "Static Web App",
       "configurations": [
-        "AzureFunctions",
+        "AzureFunctionsPowershell",
         "BlazorClient"
       ],
       "preLaunchTask": "azurite",
+      "presentation": {
+        "hidden": false,
+        "group": "",
+        "order": 1
+      }
     }
   ],
   "configurations": [
-    {
-      "name": "AzureFunctions",
-      "type": "coreclr",
-      "request": "attach",
-      "processId": "${command:azureFunctions.pickProcess}"
-    },
     {
       "name": "BlazorClient",
       "type": "blazorwasm",
@@ -25,7 +24,7 @@
       "browser": "edge"
     },
     {
-      "name": "Attach to PowerShell Functions",
+      "name": "AzureFunctionsPowershell",
       "type": "PowerShell",
       "request": "attach",
       "customPipeName": "AzureFunctionsPSWorker",

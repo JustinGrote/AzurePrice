@@ -1,4 +1,14 @@
 {
   "$schema": "http://json.schemastore.org/proxies",
-  "proxies": {}
+  "proxies": {
+    "AzureRetailPrices": {
+      "matchCondition": {
+        "methods": [
+          "GET"
+        ],
+        "route": "/api/prices"
+      },
+      "backendUri": "https://prices.azure.com/api/retail/prices"
+    }
+  }
 }

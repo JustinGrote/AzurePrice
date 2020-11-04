@@ -4,5 +4,6 @@
   "azureFunctions.projectRuntime": "~3",
   "debug.internalConsoleOptions": "neverOpen",
   "azureFunctions.preDeployTask": "publish",
-  "azurite.location": "C:\\Users\\jgrote\\Projects\\AzurePrice\\.azurite"
+  "azurite.location": "C:\\Users\\jgrote\\Projects\\AzurePrice\\.azurite",
+  "powershell.integratedConsole.showOnStartup": true
 }
