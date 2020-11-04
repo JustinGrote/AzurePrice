@@ -30,6 +30,7 @@ jobs:
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           app_location: "Client" # App source code path
           api_location: "Api" # Api source code path - optional
+          api_build_command: "true" #Fake build command
           app_artifact_location: "wwwroot" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
 
