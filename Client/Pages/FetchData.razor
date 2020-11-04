@@ -39,6 +39,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        priceResponse = await Http.GetFromJsonAsync<PriceResponse>("api/prices");
+        priceResponse = await Http.GetFromJsonAsync<PriceResponse>("/api/prices");
     }
 }
