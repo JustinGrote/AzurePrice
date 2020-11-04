@@ -39,6 +39,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        priceResponse = await Http.GetFromJsonAsync<PriceResponse>("/api/prices");
+        priceResponse = await Http.GetFromJsonAsync<PriceResponse>("/api/prices?$filter=contains(skuName%2c%27Spot%27)+and+armRegionName+eq+%27westus2%27");
     }
 }
