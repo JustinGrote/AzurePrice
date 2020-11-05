@@ -20,15 +20,81 @@
 			}
 		},
 		{
+			"label": "staticwebapp",
+			"command": "${command:notification.clear}",
+			"dependsOn": [
+				"watchClient",
+				"watchShared",
+				"func: host start"
+			],
+			"problemMatcher": []
+		},
+		{
+			"label": "watchClient",
+			"command": "dotnet",
+			"args": [
+				"watch",
+				"build",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary"
+			],
+			"type": "process",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": {
+				"base": "$msCompile",
+				"background": {
+					"activeOnStart": false,
+					"beginsPattern": "watch : Started",
+					"endsPattern":   "watch : Exited"
+				}
+			},
+			"options": {
+				"cwd": "${workspaceFolder}/Client"
+			},
+			"isBackground": true
+		},
+		{
+			"label": "watchShared",
+			"command": "dotnet",
+			"args": [
+				"watch",
+				"build",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary"
+			],
+			"type": "process",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": {
+				"base": "$msCompile",
+				"background": {
+					"activeOnStart": false,
+					"beginsPattern": "watch : Started",
+					"endsPattern":   "watch : Exited"
+				}
+			},
+			"options": {
+				"cwd": "${workspaceFolder}/Shared"
+			},
+			"isBackground": true
+		},
+		{
 			"label": "azurite",
 			"command": "${command:azurite.start}",
-			"problemMatcher": []
+			"problemMatcher": [],
+			"isBackground": true
 		},
 		{
 			"type": "func",
 			"command": "host start",
 			"problemMatcher": "$func-powershell-watch",
 			"isBackground": true,
+			"dependsOn": "azurite",
 			"options": {
 				"cwd": "${workspaceFolder}/API"
 			}

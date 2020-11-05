@@ -4,16 +4,16 @@
     {
       "name": "Static Web App",
       "configurations": [
-        "AzureFunctionsPowershell",
         "BlazorClient"
       ],
-      "preLaunchTask": "azurite",
+      // "preLaunchTask": "func: host start",
+      "preLaunchTask": "staticwebapp",
       "presentation": {
         "hidden": false,
         "group": "",
         "order": 1
       }
-    }
+    },
   ],
   "configurations": [
     {
