@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json.Serialization;
+using System.Collections.Generic;
 // Generated from https://app.quicktype.io?share=BIWN5YNMt1MFeiqHapU1 and modified for System.Text.Json
 namespace Client.Shared
 {
@@ -12,7 +13,7 @@ namespace Client.Shared
         public int Count { get; set; }
         
         [JsonPropertyName("Items")]
-        public Price[] Prices { get; set; }
+        public List<Price> Prices { get; set; }
     }
 
     public class Price

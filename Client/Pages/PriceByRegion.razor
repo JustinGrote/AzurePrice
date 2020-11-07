@@ -1,0 +1,102 @@
+﻿@page "/pricebyregion"
+@inject HttpClient Http
+@using Blazorise.DataGrid
+@using System.Collections.Generic
+
+<h1>Azure Retail Price</h1>
+
+<p>Prices for Azure Spot VMs in the US West 2 Region</p>
+
+<DataGrid 
+    TItem="Price" 
+    ShowPager=true
+    PageSize=10
+    Striped=true
+    Data="@priceList"
+    >
+    
+    <DataGridColumn Caption="Location"
+        TItem="Price"
+        Field="@nameof(Price.ArmRegionName)"
+        Readonly="true"   
+    />
+    <DataGridColumn Caption="SKU"
+        TItem="Price"
+        Field="@nameof(Price.ArmSkuName)"
+        Readonly="true"  
+    />
+    <DataGridNumericColumn Caption="Price"
+        TItem="Price" 
+        Field="@nameof(Price.UnitPrice)" 
+        Readonly="true" 
+    />
+    <DataGridDateColumn Caption="Last Changed"
+        TItem="Price" 
+        Field="@nameof(Price.EffectiveStartDate)" 
+        Readonly="true" 
+    />
+</DataGrid>
+
+@* 
+@if (priceResponse == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Region</th>
+                <th>SKU</th>
+                <th>Price</th>
+                <th>Last Updated</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var price in priceResponse.Prices)
+            {
+                <tr>
+                    <td>@price.ArmRegionName</td>
+                    <td>@price.ArmSkuName</td>
+                    <td>@price.UnitPrice</td>
+                    <td>@price.EffectiveStartDate</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+} *@
+
+@code {
+    private int totalPriceItems;
+    private PriceResponse priceResponse;
+    private int pageSize = int.MaxValue;
+
+    protected override async Task OnInitializedAsync()
+    {
+        priceResponse = await
+            Http.GetFromJsonAsync<PriceResponse>("/api/prices?$filter=contains(skuName%2c%27Spot%27)+and+armRegionName+eq+%27westus2%27");
+        priceList = priceResponse.Prices.OrderBy(p=>p.UnitPrice).ToList();
+    }
+
+    private List<Price> priceList; 
+    
+
+    @* TODO: Disabled, redo for realtime readdata filtering
+    async Task OnReadData( DataGridReadDataEventArgs<Price> e )
+    {
+        // this can be call to anything, in this case we're calling a fictional api
+        // var response = await Http.GetJsonAsync<Price[]>( $"some-api/Prices?page={e.Page}&pageSize={e.PageSize}" );
+
+        priceResponse = await
+            Http.GetFromJsonAsync<PriceResponse>($"/api/prices?$filter=contains(skuName%2c%27Spot%27)+and+armRegionName+eq+%27westus2%27&$skip={e.Page}&$top={e.PageSize}");
+
+        priceList = priceResponse.Prices; // an actual data for the current page
+        totalPriceItems = priceResponse.Count == pageSize ? 1000 : priceResponse.Count; // this is used to tell datagrid how many items are available so that pagination will work
+
+        // always call StateHasChanged!
+        StateHasChanged();
+    } *@
+}
