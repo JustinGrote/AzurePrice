@@ -1,5 +1,6 @@
 {
     "sdk": {
-        "version": "5.0.100-rc.2.20480.7"
+        "version": "5.0.100-rc.2.20480.7",
+        "rollforward": "disable"
     }
 }
