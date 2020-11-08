@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Blazorise;
+using Blazorise.Bootstrap;
+using Blazorise.Icons.FontAwesome;
 
 namespace Client
 {
@@ -21,7 +24,16 @@ namespace Client
             // https://swimburger.net/blog/dotnet/how-to-deploy-aspnet-blazor-webassembly-to-azure-static-web-apps#integrating-blazor-with-azure-functions
             var baseAddress = builder.Configuration["BaseAddress"] ?? builder.HostEnvironment.BaseAddress;
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseAddress) });
-
+            
+            // Enable Blazorise
+            builder.Services
+                .AddBlazorise( options =>
+                {
+                    options.ChangeTextOnKeyPress = true;
+                } )
+                .AddBootstrapProviders()
+                .AddFontAwesomeIcons();
+                
             await builder.Build().RunAsync();
         }
     }

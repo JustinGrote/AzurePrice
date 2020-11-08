@@ -1,0 +1,1 @@
+This is extracted from source rather than Nuget so that it can use System.Text.Json rather than Newtonsoft.Json

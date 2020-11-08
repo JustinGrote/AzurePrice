@@ -5,5 +5,10 @@
   "debug.internalConsoleOptions": "neverOpen",
   "azureFunctions.preDeployTask": "publish",
   "azurite.location": "C:\\Users\\jgrote\\Projects\\AzurePrice\\.azurite",
-  "powershell.integratedConsole.showOnStartup": true
+  "powershell.integratedConsole.showOnStartup": true,
+  "github-actions.workflows.pinned.refresh.enabled": true,
+  "github-actions.workflows.pinned.refresh.interval": 5,
+  "github-actions.workflows.pinned.workflows": [
+    ".github/workflows/azure-static-web-apps-icy-field-0b85c881e.yml"
+  ]
 }

@@ -21,7 +21,12 @@
       "type": "blazorwasm",
       "request": "launch",
       "cwd": "${workspaceFolder}/Client",
-      "browser": "edge"
+      "browser": "edge",
+      "presentation": {
+        "hidden": false,
+        "group": "server",
+        "order": 1
+      }
     },
     {
       "name": "AzureFunctionsPowershell",
