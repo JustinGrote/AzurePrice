@@ -33,7 +33,7 @@ jobs:
           app_artifact_location: "wwwroot" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
         env:
-          DOTNET_VERSION: "5.0.100-rc.2.20480.7"
+          DOTNET_VERSION: 5.0.0-rc.2.20475.5
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
