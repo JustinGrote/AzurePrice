@@ -35,14 +35,24 @@
     />
     <DataGridNumericColumn Caption="Price/hr"
         TItem=Price
-        Field=@nameof(Price.UnitPriceDollars)
-        Readonly=true
-    />
+        Field=@nameof(Price.UnitPrice)
+        Readonly=true>
+        <DisplayTemplate>
+            @(
+                (context as Price).UnitPriceDollars
+            )
+        </DisplayTemplate>
+    </DataGridNumericColumn>
     <DataGridNumericColumn Caption="Price/mo"
         TItem=Price
-        Field=@nameof(Price.UnitPriceMonthlyDollars)
-        Readonly=true
-    />
+        Field=@nameof(Price.UnitPriceMonthly)
+        Readonly=true>
+        <DisplayTemplate>
+            @(
+                (context as Price).UnitPriceMonthlyDollars
+            )
+        </DisplayTemplate>
+    </DataGridNumericColumn>
     <DataGridDateColumn Caption="Last Changed"
         TItem=Price
         Field=@nameof(Price.EffectiveStartDate)
