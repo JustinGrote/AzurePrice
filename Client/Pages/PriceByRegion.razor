@@ -7,33 +7,37 @@
 
 <p>Prices for Azure Spot VMs in the US West 2 Region</p>
 
+<h3>Region</h3>
+
+<SelectList Data="@regions"
+    TextField="@((item)=>item)"
+    ValueField="@((item)=>item)"
+    SelectedValue="@currentRegion"
+    SelectedValueChanged="@RegionSelectHandler" />
+<br />
 <DataGrid 
     TItem="Price" 
     ShowPager=true
     PageSize=10
     Striped=true
+    Filterable="true"
     Data="@priceList"
     >
     
-    <DataGridColumn Caption="Location"
-        TItem="Price"
-        Field="@nameof(Price.ArmRegionName)"
-        Readonly="true"   
-    />
     <DataGridColumn Caption="SKU"
         TItem="Price"
         Field="@nameof(Price.ArmSkuName)"
-        Readonly="true"  
+        Readonly="true"
     />
     <DataGridNumericColumn Caption="Price"
         TItem="Price" 
-        Field="@nameof(Price.UnitPrice)" 
-        Readonly="true" 
+        Field="@nameof(Price.UnitPrice)"
+        Readonly="true"
     />
     <DataGridDateColumn Caption="Last Changed"
         TItem="Price" 
-        Field="@nameof(Price.EffectiveStartDate)" 
-        Readonly="true" 
+        Field="@nameof(Price.EffectiveStartDate)"
+        Readonly="true"
     />
 </DataGrid>
 
@@ -70,17 +74,30 @@ else
 } *@
 
 @code {
+    //SelectList Stuff
+    //FIXME: Abstract list definition to function that fetches from IP Address API maybe?
+    private List<string> regions = new List<string> { "australiacentral", "australiacentral2", "australiaeast", "australiasoutheast", "brazilsouth", "brazilsoutheast", "canadacentral", "canadaeast", "centralindia", "centralus", "eastasia", "eastus", "eastus2", "francecentral", "francesouth", "germanynorth", "germanywestcentral", "japaneast", "japanwest", "koreacentral", "koreasouth", "northcentralus", "northeurope", "norwayeast", "norwaywest", "southafricanorth", "southafricawest", "southcentralus", "southeastasia", "southindia", "switzerlandnorth", "switzerlandwest", "uaecentral", "uaenorth", "uksouth", "ukwest", "westcentralus", "westeurope", "westindia", "westus", "westus2" };
+    private object currentRegion { get; set; } = "westus2";
+
+    //DataGrid Stuff
     private PriceResponse priceResponse;
 
-    protected override async Task OnInitializedAsync()
+    async Task RegionSelectHandler( object newValue )
     {
+        currentRegion = newValue;
         priceResponse = await
-            Http.GetFromJsonAsync<PriceResponse>("/api/prices?$filter=contains(skuName%2c%27Spot%27)+and+armRegionName+eq+%27westus2%27");
+            Http.GetFromJsonAsync<PriceResponse>($"/api/prices?$filter=contains(skuName%2c%27Spot%27)+and+armRegionName+eq+%27{currentRegion}%27");
         priceList = priceResponse.Prices.OrderBy(p=>p.UnitPrice).ToList();
     }
 
+    protected override async Task OnInitializedAsync()
+    {
+        //FIXME: Abstract this to a new function when I learn how
+        priceResponse = await
+            Http.GetFromJsonAsync<PriceResponse>($"/api/prices?$filter=contains(skuName%2c%27Spot%27)+and+armRegionName+eq+%27{currentRegion}%27");
+        priceList = priceResponse.Prices.OrderBy(p=>p.UnitPrice).ToList();
+    }
     private List<Price> priceList; 
-    
 
     @* TODO: Disabled, redo for realtime readdata filtering
     async Task OnReadData( DataGridReadDataEventArgs<Price> e )
