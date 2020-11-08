@@ -57,6 +57,4 @@
             Http.GetFromJsonAsync<PriceResponse>($"/api/prices?$filter=contains(skuName%2c%27Spot%27)+and+armSkuName+eq+%27{currentSku}%27");
         priceList = priceResponse.Prices.OrderBy(p=>p.UnitPrice).ToList();
     }
-
-    
 }
