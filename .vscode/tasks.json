@@ -54,6 +54,15 @@
 			"options": {
 				"cwd": "${workspaceFolder}/Client"
 			},
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false,
+				"group": "watch"
+			},
 			"isBackground": true
 		},
 		{
@@ -78,6 +87,15 @@
 					"endsPattern":   "watch : Exited"
 				}
 			},
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false,
+				"group": "watch"
+			},
 			"options": {
 				"cwd": "${workspaceFolder}/Shared"
 			},
@@ -97,6 +115,15 @@
 			"dependsOn": "azurite",
 			"options": {
 				"cwd": "${workspaceFolder}/API"
+			},
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false,
+				"group": "server"
 			}
 		}
 	]
