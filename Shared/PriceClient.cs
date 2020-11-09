@@ -58,9 +58,10 @@ namespace Client.Shared
         {
             List<Price> priceList = new();
             List<Task<List<Price>>> prefetchTasks = new();
-
-            for(int i = 0; i < prefetchCount; i++) {
-                query.Skip = i * defaultPageSize;
+            
+            int currentPage;
+            for(currentPage = 0; currentPage < prefetchCount; currentPage++) {
+                query.Skip = currentPage * defaultPageSize;
                 prefetchTasks.Add(
                     //true here makes sure that we don't follow the paging and end up with duplicate results
                     GetPrices(query, true)
@@ -72,6 +73,12 @@ namespace Client.Shared
                 priceList.AddRange(task.Result);
             }
 
+            //If there were 100 items in the last query, continue to fetch more items normally until all items retrieved
+            if (prefetchTasks[^1].Result.Count == 100) {
+                query.Skip = currentPage * defaultPageSize;
+                priceList.AddRange(await GetPrices(query, false));
+            }
+
             return priceList;
         }
 
@@ -79,12 +86,12 @@ namespace Client.Shared
             return path + nextPageLink.Query;
         }
 
-        public async Task<List<Price>> GetSpotPrices(ODataQuery<Price> query)
+        public async Task<List<Price>> GetSpotPrices(ODataQuery<Price> query, int prefetchCount)
         {
             string spotVMFilter = " and endswith(skuName,'Spot') eq true and endswith(productName,'Windows') eq false";
             query.Filter += spotVMFilter;
             query.OrderBy = "unitPrice";
-            return await GetPrices(query, 5);
+            return await GetPrices(query, prefetchCount);
         }
     }
 }
