@@ -10,7 +10,7 @@
       },
       "backendUri": "https://prices.azure.com/api/retail/prices",
       "responseOverrides": {
-        "response.headers.Cache-Control": "public;max-age=3600",
+        "response.headers.Cache-Control": "public, max-age=3600",
         "response.headers.pragma": "ignore"
       }
     }
