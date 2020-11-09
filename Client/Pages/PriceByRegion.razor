@@ -74,7 +74,8 @@
 
     async Task<List<Price>> GetSpotPricesByRegion(string region) {
         var query = new ODataQuery<Price>($"armRegionName eq '{region}'");
-        return await client.GetSpotPrices(query);
+        //Prefetch 400 records
+        return await client.GetSpotPrices(query, 4);
     }
 
     async Task RegionSelectHandler( object newValue )

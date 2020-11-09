@@ -61,8 +61,8 @@
         //DataGrid Stuff
 
     async Task<List<Price>> GetSpotPricesBySku(string sku) {
-        var query = new ODataQuery<Price>($"armSkuName eq '{sku}'");
-        return await client.GetSpotPrices(query);
+        var query = new ODataQuery<Price>($"armSkuName eq '{sku}' and armRegionName ne 'Global'");
+        return await client.GetSpotPrices(query, 1);
     }
 
     async Task SkuSelectHandler( object newValue )
