@@ -8,7 +8,10 @@
         ],
         "route": "/api/prices"
       },
-      "backendUri": "https://prices.azure.com/api/retail/prices"
+      "backendUri": "https://prices.azure.com/api/retail/prices",
+      "responseOverrides": {
+        "response.headers.Cache-Control": "max-age=3600"
+      }
     }
   }
 }
