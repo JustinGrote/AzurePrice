@@ -13,6 +13,9 @@ namespace Client.Shared
         //Reused Blazor WASM client
         protected readonly HttpClient http;
 
+        //Quirk: Retail Price API will only return a maximum of this number of records
+        protected readonly int defaultPageSize = 100;
+
         //Path the the api
         public readonly string path = "/api/prices";
         public PriceClient(HttpClient httpclient)
@@ -20,11 +23,10 @@ namespace Client.Shared
             http = httpclient;
         }
 
-        public async Task<List<Price>> GetPrices(ODataQuery<Price> query)
+        public async Task<List<Price>> GetPrices(ODataQuery<Price> query, bool firstPageOnly)
         {
             List<Price> priceList = new();
             string requestUri = path + '?' + query.ToString();
-
 
             int requestItemCount;
             Uri nextPageLink = null;
@@ -34,7 +36,7 @@ namespace Client.Shared
             {
                 if (nextPageLink != null)
                 {
-                    requestUri = convertNextPageLinkToRelativeURI(nextPageLink);
+                    requestUri = ConvertNextPageLinkToRelativeURI(nextPageLink);
                 }
 
                 var response = await http.GetFromJsonAsync<PriceResponse>(requestUri);
@@ -42,6 +44,8 @@ namespace Client.Shared
                 requestItemCount = response.Count;
                 nextPageLink = response.NextPageLink;
             } while (
+                //TODO: Structure this better for concurrent readahead than this firstpageonly option
+                !firstPageOnly &&
                 requestItemCount == 100 && 
                 Regex.IsMatch(nextPageLink.ToString(), "skip=\\d+$")
             );
@@ -49,7 +53,29 @@ namespace Client.Shared
             return priceList;
         }
 
-        private String convertNextPageLinkToRelativeURI(Uri nextPageLink) {
+        //Prefetch to operate more quickly
+        public async Task<List<Price>> GetPrices(ODataQuery<Price> query, int prefetchCount = 5)
+        {
+            List<Price> priceList = new();
+            List<Task<List<Price>>> prefetchTasks = new();
+
+            for(int i = 0; i < prefetchCount; i++) {
+                query.Skip = i * defaultPageSize;
+                prefetchTasks.Add(
+                    //true here makes sure that we don't follow the paging and end up with duplicate results
+                    GetPrices(query, true)
+                );
+            }
+
+            await Task.WhenAll(prefetchTasks);
+            foreach (Task<List<Price>> task in prefetchTasks) {
+                priceList.AddRange(task.Result);
+            }
+
+            return priceList;
+        }
+
+        string ConvertNextPageLinkToRelativeURI(Uri nextPageLink) {
             return path + nextPageLink.Query;
         }
 
@@ -58,7 +84,7 @@ namespace Client.Shared
             string spotVMFilter = " and endswith(skuName,'Spot') eq true and endswith(productName,'Windows') eq false";
             query.Filter += spotVMFilter;
             query.OrderBy = "unitPrice";
-            return await GetPrices(query);
+            return await GetPrices(query, 5);
         }
     }
 }
