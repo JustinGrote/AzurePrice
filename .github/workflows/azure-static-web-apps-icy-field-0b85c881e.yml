@@ -19,6 +19,23 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
+      # Cache the nuget packages to speed up deployment
+      - name: Cache Dotnet Nuget
+        uses: actions/cache@v2
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget
+      # Cache the dotnet framework to speed up deployment
+      - name: Cache Dotnet 5
+        #FIXME: Allow different dotnet versions
+        uses: actions/cache@v2
+        with:
+          path: /tmp/oryx/platforms/dotnet/5.0.100
+          key: ${{ runner.os }}-dotnetsdk-5.0.100
+          restore-keys: |
+            ${{ runner.os }}-dotnetsdk-5.0.100
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v0.0.1-preview
