@@ -24,7 +24,6 @@
 			"command": "${command:notification.clear}",
 			"dependsOn": [
 				"watchClient",
-				"watchShared",
 				"func: host start"
 			],
 			"problemMatcher": []
@@ -123,7 +122,7 @@
 				"panel": "shared",
 				"showReuseMessage": true,
 				"clear": false,
-				"group": "server"
+				"group": "watch"
 			}
 		}
 	]
