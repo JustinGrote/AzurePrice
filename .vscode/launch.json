@@ -10,7 +10,7 @@
       "preLaunchTask": "staticwebapp",
       "presentation": {
         "hidden": false,
-        "group": "",
+        "group": "blazor",
         "order": 1
       }
     },
@@ -24,17 +24,9 @@
       "browser": "edge",
       "presentation": {
         "hidden": false,
-        "group": "server",
-        "order": 1
+        "group": "blazor",
+        "order": 2
       }
-    },
-    {
-      "name": "AzureFunctionsPowershell",
-      "type": "PowerShell",
-      "request": "attach",
-      "customPipeName": "AzureFunctionsPSWorker",
-      "runspaceId": 1,
-      "preLaunchTask": "func: host start"
     }
   ]
 }
