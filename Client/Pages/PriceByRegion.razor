@@ -33,23 +33,63 @@
         Field=@nameof(Price.ArmSkuName)
         Readonly=true
     />
+    <DataGridNumericColumn Caption="Discount"
+        TItem=Price
+        Field=@nameof(Price.Discount)
+        Readonly=true>
+        <DisplayTemplate>
+            @(
+                context.Discount.ToString("P1")
+            )
+        </DisplayTemplate>
+    </DataGridNumericColumn>
     <DataGridNumericColumn Caption="Price/hr"
         TItem=Price
         Field=@nameof(Price.UnitPrice)
         Readonly=true>
         <DisplayTemplate>
             @(
-                (context as Price).UnitPriceDollars
+                context.UnitPriceDollars
+            )
+        </DisplayTemplate>
+    </DataGridNumericColumn>
+    <DataGridNumericColumn Caption="Price/day"
+        TItem=Price
+        Field=@nameof(Price.UnitPrice)
+        Readonly=true>
+        <DisplayTemplate>
+            @(
+                context.UnitPriceDailyDollars
+            )
+        </DisplayTemplate>
+    </DataGridNumericColumn>
+    <DataGridNumericColumn Caption="Price/wk"
+        TItem=Price
+        Field=@nameof(Price.UnitPrice)
+        Readonly=true>
+        <DisplayTemplate>
+            @(
+                context.UnitPriceWeeklyDollars
             )
         </DisplayTemplate>
     </DataGridNumericColumn>
     <DataGridNumericColumn Caption="Price/mo"
         TItem=Price
-        Field=@nameof(Price.UnitPriceMonthly)
+        Field=@nameof(Price.UnitPrice)
         Readonly=true>
         <DisplayTemplate>
             @(
-                (context as Price).UnitPriceMonthlyDollars
+                context.UnitPriceMonthlyDollars
+            )
+        </DisplayTemplate>
+    </DataGridNumericColumn>
+    <DataGridNumericColumn Caption="Retail"
+        TItem=Price
+        Field=@nameof(Price.RetailPrice)
+        Readonly=true>
+        <DisplayTemplate>
+            @(
+                context.RetailPrice.ToString("C6")
             )
         </DisplayTemplate>
     </DataGridNumericColumn>
@@ -59,7 +99,6 @@
         Readonly=true
     />
 </DataGrid>
-
 
 @code {
     //SelectList Stuff
@@ -73,9 +112,22 @@
     private List<Price> priceList;
 
     async Task<List<Price>> GetSpotPricesByRegion(string region) {
-        var query = new ODataQuery<Price>($"armRegionName eq '{region}'");
+        
         //Prefetch 400 records
-        return await client.GetSpotPrices(query, 4);
+        var query = new ODataQuery<Price>($"armRegionName eq '{region}'");
+        var spotPrices = await client.GetSpotPrices(query, 4);
+        //BUGFIX: Reset the query
+        //TODO: Find a better way to re-instantiate the item
+        query = new ODataQuery<Price>($"armRegionName eq '{region}'");
+        var retailPrices = await client.GetRetailPrices(query, 4);
+        foreach (Price spotPriceItem in spotPrices) {
+            try {
+                spotPriceItem.RetailPrice = retailPrices.Single<Price>(priceItem => priceItem.ArmSkuName == spotPriceItem.ArmSkuName).RetailPrice;
+            } catch (InvalidOperationException) {
+                Console.WriteLine(spotPriceItem.ArmSkuName);
+            }
+        }
+        return spotPrices.OrderByDescending(price=>price.Discount).ToList();
     }
 
     async Task RegionSelectHandler( object newValue )

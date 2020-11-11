@@ -27,23 +27,50 @@ namespace Client.Shared
         public string ArmSkuName { get; set; }
         public string ReservationTerm { get; set; }
 
-        //Calculated properties
-        public string UnitPriceDollars { 
+        public double Discount {
             get {
-                return UnitPrice.ToString("C6");
+                return 1 - (UnitPrice / RetailPrice);
+            }
+        }
+        static string ToDollars(double unitPrice) {
+            return unitPrice.ToString("C6");
+        }
+        public double UnitPriceDaily { 
+            get {
+                const int hoursInADay = 24;
+                return UnitPrice * hoursInADay;
+            }
+        }
+        public double UnitPriceWeekly { 
+            get {
+                const int daysInAWeek = 24;
+                return UnitPrice * daysInAWeek;
             }
         }
         public double UnitPriceMonthly {
             get {
-                //An azure month is 730 hours
-                return UnitPrice*730;
+                const int azureMonthHours = 730;
+                return UnitPrice * azureMonthHours;
             }
         }
-        
+        public string UnitPriceDollars {
+            get {
+                return ToDollars(UnitPrice);
+            }
+        }
+        public string UnitPriceDailyDollars {
+            get {
+                return ToDollars(UnitPriceDaily);
+            }
+        }
+        public string UnitPriceWeeklyDollars {
+            get {
+                return ToDollars(UnitPriceWeekly);
+            }
+        }
         public string UnitPriceMonthlyDollars {
             get {
-                //An azure month is 730 hours
-                return UnitPriceMonthly.ToString("C6");
+                return ToDollars(UnitPriceMonthly);
             }
         }
     }

@@ -109,7 +109,7 @@
 		{
 			"type": "func",
 			"command": "host start",
-			"problemMatcher": "$func-powershell-watch",
+			"problemMatcher": "$func-watch",
 			"isBackground": true,
 			"dependsOn": "azurite",
 			"options": {

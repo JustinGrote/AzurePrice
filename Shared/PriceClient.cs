@@ -86,10 +86,20 @@ namespace Client.Shared
             return path + nextPageLink.Query;
         }
 
+        readonly string commonFilter = "serviceName eq 'Virtual Machines' and priceType eq 'Consumption' and endswith(productName,'Windows') eq false";
+
         public async Task<List<Price>> GetSpotPrices(ODataQuery<Price> query, int prefetchCount)
         {
-            string spotVMFilter = " and endswith(skuName,'Spot') eq true and endswith(productName,'Windows') eq false";
+            string spotVMFilter = $"and {commonFilter} and endswith(skuName,'Spot') eq true";
             query.Filter += spotVMFilter;
+            query.OrderBy = "unitPrice";
+            return await GetPrices(query, prefetchCount);
+        }
+
+        public async Task<List<Price>> GetRetailPrices(ODataQuery<Price> query, int prefetchCount)
+        {
+            string retailVMFilter = $"and {commonFilter} and endswith(skuName,'Spot') eq false and endswith(skuName,'Low Priority') eq false";
+            query.Filter += retailVMFilter;
             query.OrderBy = "unitPrice";
             return await GetPrices(query, prefetchCount);
         }
