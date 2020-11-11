@@ -127,9 +127,7 @@
         foreach (Price spotPriceItem in spotPrices) {
             try {
                 spotPriceItem.RetailPrice = retailPrices.Single<Price>(priceItem => priceItem.ArmSkuName == spotPriceItem.ArmSkuName).RetailPrice;
-            } catch (InvalidOperationException) {
-                Console.WriteLine(spotPriceItem.ArmSkuName);
-            }
+            } catch (InvalidOperationException) {}
         }
         return spotPrices.OrderByDescending(price=>price.Discount).ToList();
     }
