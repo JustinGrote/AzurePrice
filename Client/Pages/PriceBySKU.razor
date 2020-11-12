@@ -101,16 +101,21 @@
         //DataGrid Stuff
 
     async Task<List<Price>> GetSpotPricesBySku(string sku) {
-        var query = new ODataQuery<Price>($"armSkuName eq '{sku}' and armRegionName ne 'Global'");
-        var spotPrices = await client.GetSpotPrices(query, 1);
-        query = new ODataQuery<Price>($"armSkuName eq '{sku}' and armRegionName ne 'Global'");
-        var retailPrices = await client.GetRetailPrices(query, 1);
+        var spotQuery = new ODataQuery<Price>($"armSkuName eq '{sku}' and armRegionName ne 'Global'");
+        var spotPriceFetch = client.GetSpotPrices(spotQuery, 1);
+
+        var retailQuery = new ODataQuery<Price>($"armSkuName eq '{sku}' and armRegionName ne 'Global'");
+        var retailPriceFetch = client.GetRetailPrices(retailQuery, 1);
+
+        var taskResult = await Task.WhenAll(spotPriceFetch,retailPriceFetch);
+
+        var spotPrices = spotPriceFetch.Result;
+        var retailPrices = retailPriceFetch.Result;
+
         foreach (Price spotPriceItem in spotPrices) {
             try {
                 spotPriceItem.RetailPrice = retailPrices.Single<Price>(priceItem => priceItem.ArmRegionName == spotPriceItem.ArmRegionName).RetailPrice;
-            } catch (InvalidOperationException) {
-                Console.WriteLine(spotPriceItem.ArmSkuName);
-            }
+            } catch (InvalidOperationException) {}
         }
         return spotPrices.OrderByDescending(price=>price.Discount).ToList();
     }
