@@ -7,6 +7,8 @@
 
 <h3>Sku</h3>
 <SelectList Data="@skus"
+    TItem="string"
+    TValue="object"
     TextField="@((item)=>item)"
     ValueField="@((item)=>item)"
     SelectedValue="@currentSku"

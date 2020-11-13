@@ -8,14 +8,15 @@
 <h3>Region</h3>
 
 <SelectList Data="@regions"
+    TItem="string"
+    TValue="object"
     TextField="@((item)=>item)"
     ValueField="@((item)=>item)"
     SelectedValue="@currentRegion"
     SelectedValueChanged="@RegionSelectHandler" 
 />
 
-
-<DataGrid 
+<DataGrid
     TItem=Price
     ShowPager=true
     PageSize=10
